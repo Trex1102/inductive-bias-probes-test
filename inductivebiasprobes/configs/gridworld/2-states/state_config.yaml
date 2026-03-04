@@ -1,0 +1,8 @@
+block_size: 99
+input_dim: 1
+input_vocab_size: 3
+mask_id: -1
+num_data_points: 100000
+output_dim: 1
+output_vocab_size: 2
+predict_type: state

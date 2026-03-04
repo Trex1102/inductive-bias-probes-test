@@ -1,0 +1,60 @@
+__pycache__/
+docs/_build/
+build/
+dist/
+results/
+
+*egg-info
+*.ipynb_checkpoints
+*.pyc
+*.pkl
+*-ubyte*
+*.log
+*.mp4
+
+# ignore figures unless manually added
+*.png
+*.jpg
+*.pdf
+*-dot
+*.DS_Store
+.vscode/
+.venv
+.env
+*/data/*
+
+# Data, checkpoints and wandb are not tracked
+data/
+checkpoints/
+extrapolations/
+**/wandb/
+scratch/
+
+# Version files
+**/version.py
+
+outputs/
+*.pdf
+
+# Python virtual environments
+venv/
+env/
+.python-version
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# PyTorch / JAX artifacts
+*.pt
+*.ckpt
+*.safetensors
+*.h5
+
+# OS
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
