@@ -319,9 +319,10 @@ class Model(nn.Module):
             x, _ = self.core(x)
 
         # Output projection
-        if return_reps:
-            return x
-        output = self.output_head(x)
+        reps = x  # Save hidden representations before output head
+        if return_reps and targets is None:
+            return reps
+        output = self.output_head(reps)
         if targets is not None:
             if target_callback is not None:
                 targets = target_callback(targets)
@@ -354,6 +355,8 @@ class Model(nn.Module):
                 loss = (element_losses * mask).sum(axis=(1, 2)) / (
                     mask.sum(axis=(1, 2)) + 1e-8
                 )
+            if return_reps:
+                return output, loss, reps
             return output, loss
         return output
 

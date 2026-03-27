@@ -7,12 +7,14 @@ CKPT_DIR = BASE_DIR / "checkpoints"
 PHYSICS_CKPT_DIR = CKPT_DIR / "physics"
 GRIDWORLD_CKPT_DIR = CKPT_DIR / "gridworld"
 OTHELLO_CKPT_DIR = CKPT_DIR / "othello"
+HEAT_EQ_CKPT_DIR = CKPT_DIR / "heat_equation"
 
 # Config directories
 CONFIG_DIR = BASE_DIR / "configs"
 PHYSICS_CONFIG_DIR = CONFIG_DIR / "physics"
 GRIDWORLD_CONFIG_DIR = CONFIG_DIR / "gridworld"
 OTHELLO_CONFIG_DIR = CONFIG_DIR / "othello"
+HEAT_EQ_CONFIG_DIR = CONFIG_DIR / "heat_equation"
 
 # Data directories
 # If you have an ephemeral drive, you can set this to the path of the ephemeral drive.
@@ -22,9 +24,11 @@ DATA_DIR = BASE_DIR / "data"
 PHYSICS_DATA_DIR = DATA_DIR / "physics"
 GRIDWORLD_DATA_DIR = DATA_DIR / "gridworld"
 OTHELLO_DATA_DIR = DATA_DIR / "othello"
+HEAT_EQ_DATA_DIR = DATA_DIR / "heat_equation"
 
 # Extrapolation directories
 EXT_DIR = BASE_DIR / "extrapolations"
 PHYSICS_EXT_DIR = EXT_DIR / "physics"
 GRIDWORLD_EXT_DIR = EXT_DIR / "gridworld"
 OTHELLO_EXT_DIR = EXT_DIR / "othello"
+HEAT_EQ_EXT_DIR = EXT_DIR / "heat_equation"

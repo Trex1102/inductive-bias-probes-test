@@ -591,6 +591,8 @@ def train(
     loss_callback_name=None,
     target_callback=None,
     loss_name=None,
+    save_checkpoint_steps=None,
+    extra_loss_fn=None,
 ):
     """Main training loop.
 
@@ -615,6 +617,7 @@ def train(
     t0 = time.time()
     raw_model = model.module if ddp else model
     running_mfu = -1.0
+    _save_ckpt_steps_set = set(save_checkpoint_steps) if save_checkpoint_steps else set()
 
     # Calculate iterations per epoch
     dataset_size = config["num_data_points"]
@@ -723,9 +726,17 @@ def train(
             with nullcontext() if config["device"] == "cpu" else torch.amp.autocast(
                 device_type="cuda", dtype=ptdtype
             ):
-                _, loss = model(X, Y, target_callback, loss_name=loss_name)
-                loss = loss.mean()
-                loss = loss / config["gradient_accumulation_steps"]
+                if extra_loss_fn is not None:
+                    _, loss, reps = model(
+                        X, Y, target_callback, loss_name=loss_name, return_reps=True
+                    )
+                    loss = loss.mean()
+                    extra_loss = extra_loss_fn(reps, X, config)
+                    loss = (loss + extra_loss) / config["gradient_accumulation_steps"]
+                else:
+                    _, loss = model(X, Y, target_callback, loss_name=loss_name)
+                    loss = loss.mean()
+                    loss = loss / config["gradient_accumulation_steps"]
             scaler.scale(loss).backward()
 
         if config["grad_clip"] != 0.0:
@@ -735,6 +746,20 @@ def train(
         scaler.step(optimizer)
         scaler.update()
         optimizer.zero_grad(set_to_none=True)
+
+        # Save checkpoints at specified log-spaced steps
+        if _save_ckpt_steps_set and iter_num in _save_ckpt_steps_set and master_process:
+            step_checkpoint = {
+                "model": raw_model.state_dict(),
+                "optimizer": optimizer.state_dict(),
+                "model_args": config,
+                "iter_num": iter_num,
+                "epoch": current_epoch,
+                "best_val_loss": best_val_loss,
+                "config": config,
+            }
+            ckpt_dir.mkdir(parents=True, exist_ok=True)
+            torch.save(step_checkpoint, ckpt_dir / f"ckpt_step_{iter_num}.pt")
 
         t1 = time.time()
         dt = t1 - t0
