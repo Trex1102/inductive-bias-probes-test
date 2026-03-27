@@ -35,6 +35,7 @@ scratch/
 
 outputs/
 *.pdf
+*.tex 
 
 # Python virtual environments
 venv/
